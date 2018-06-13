@@ -1,0 +1,17 @@
+{
+  "Version": 0.0,
+  "Server": {
+    "port": 9000
+  },
+  "Token": {
+    "tokenLife": 36000,
+    "tokenSecret": "$$80b+kyaejyv4c5s@fv;sodhaij3fnmdld+#@rfhf36522$#%$5"
+  },
+  "Database": {
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "dbName": "credit_process"
+  },
+  "AllowOrigin": "http://localhost:4200"
+}
