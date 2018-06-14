@@ -22,4 +22,14 @@ router.get('/ci', function(req, res, next) {
       .catch(error => {throw error})
   });
 
+// Получение всех руководителей
+router.get('/managers', function(req, res, next) {
+  model.Manager
+    .findAll({
+      include: [ model.People]
+    })
+    .then(managers => res.json(managers))
+    .catch(error => {throw error})
+});
+
 module.exports = router;
