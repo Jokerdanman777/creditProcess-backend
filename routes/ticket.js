@@ -24,11 +24,13 @@ router.get('/all', function(req, res, next) {
       {
         model: model.Manager,
         include: [model.People]
-      }
-    ]
+      }],
+      order: [
+        ['id', 'ASC']
+      ]
     })
     .then(tickets => res.json(tickets))
-    .catch(error => {throw error})
+    .catch(error => next(error))
 });
 
 
@@ -38,7 +40,7 @@ router.get('/segements', function(req, res, next) {
     .findAll({
     })
     .then(segements => res.json(segements))
-    .catch(error => {throw error})
+    .catch(error => next(error))
 });
 
 // Получение всех уровней
@@ -47,7 +49,7 @@ router.get('/levels', function(req, res, next) {
     .findAll({
     })
     .then(levels => res.json(levels))
-    .catch(error => {throw error})
+    .catch(error => next(error))
 });
 
 // Получение все возможных этапов
@@ -56,13 +58,13 @@ router.get('/steps', function(req, res, next) {
     .findAll({
     })
     .then(steps => res.json(steps))
-    .catch(error => {throw error})
+    .catch(error => next(error))
 });
 
 // Получение заявкт по id
 router.get('/:id', function(req, res, next) {
   model.Ticket
-    .findAll({
+    .findOne({
       where: {
         id: req.params.id,
         active: 1,
@@ -87,29 +89,27 @@ router.get('/:id', function(req, res, next) {
     ]
     })
     .then(ticket => res.json(ticket))
-    .catch(error => {throw error})
+    .catch(error => next(error))
 });
 
 // создание новой заявки
 router.post('/new', function(req, res, next){
  return sequelizeDb.transaction(t => {
     return model.Ticket.create(
-      req.body,
-      {transaction: t}
+      req.body
     ).then(ticket => {
        req.body.selectSteps.forEach(element => {
        return model.Step.create({
           ticketId : ticket.id,
           stepNameId: element
-        }, {transaction : t})
+        });
       });
-    })
+    });
   })
   .then(function (result) {
-    t.commit();
+    res.json('SUCCESS');
   })
   .catch(error => {
-    t.rollback();
     return next(error);
     })
   });
